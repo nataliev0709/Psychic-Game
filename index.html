@@ -1,41 +1,75 @@
 <!DOCTYPE html>
 <html lang="en-us">
+
 <head>
-	<meta charset="utf-8">
-	<title>Psychic Game</title>
-	<link rel="stylesheet" type="text/css" href="assets/css/reset.css">
-	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+    <meta charset="utf-8">
+    <title>Psychic Game</title>
+    <link rel="stylesheet" type="text/css" href="assets/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
 </head>
+
 <body>
+    <!--1. user guess
+	2. random computer guess
+	3. onkey up function to record key pressed
+	4. track wins/losses/etc and put on screen with a function/if else statements-->
+    <div id="game">
+        <h1>The Psychic Game</h1>
+        <p>Guess what letter I'm thinking of</p>
+        <p>Wins:
+            <game id="Wins">0</game>
+        </p>
+        <p>Losses:
+            <game id="Losses">0</game>
+        </p>
+        <p>Guesses Left:
+            <game id="Guesses Left">9</label>
+        </p>
+        <p>Your Guesses So Far:
+            <game id="Your Guesses So Far"></game>
+        </p>
+    </div>
+    <script type="text/javascript">
+    var options = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
 
-	<h1>The Psychic Game</h1>
+    var wins = 0;
+    var losses = 0;
+    var guessesLeft = 9;
+    var yourGuessesSoFar = []; //empty array bc this will collect the user guesses
 
-	<p>Guess what letter I'm thinking of</p>
+    var computerGuess = options[Math.floor(Math.random() * options.length)]; //choose a random number from options/array of letters..needs to be out of the function bc we do not want the computer to continuously change their guess..make one choice and the user needs to guess it until correct or the game resets
 
-	<p>Wins: <game id="wins">0</game></p>
+    document.onkeyup = function(event) { //on key up perform an event..what event...
+        var userGuess = event.key; //the event is the pressing of the key
 
-	<p>Losses: <game id="losses">0</game></p>
+        if (userGuess === computerGuess) {
+            wins++; //add a win and then reset the game.  what does resetting game mean? reset guesses let to 9..reset the guesses so far and reset the computer's random guess
+            guessesLeft = 9;
+            yourGuessesSoFar = [];
+            computerGuess = options[Math.floor(Math.random() * options.length)];
+        } else {
+            guessesLeft--; //if user doesn't make correct guess we want the guesses left to be subtracted by 1
+            yourGuessesSoFar.push(userGuess); //.push(userGuess) pushes the letter guessed to the empty array
 
-	<p>Guesses Left: <game id="guessesLeft">0</label></p>
+            if (guessesLeft === 0) { //once guesses left reaches 0..add a loss and reset the game again by putting back 9 more guesses..emptying out the array again and having the computer make a random choice again
+                losses++;
+                guessesLeft = 9;
+                yourGuessesSoFar = [];
+                computerGuess = options[Math.floor(Math.random() * options.length)];
+            }
+        }
+        	//this section is the new html to be shown once game has begun
+        var html = "<h1>The Psychic Game</h1>" +
+            "<p>Guess what letter I'm thinking of</p>" +
+            "<p>Wins: " + wins + "</p>" +
+            "<p>Losses: " + losses + "</p>" +
+            "<p>Guesses Left: " + guessesLeft + "</p>" +
+            "<p>Your Guesses So Far: " + yourGuessesSoFar.join(' ') + "</p>"; //.join makes sure the list of letters guessed is being shown on the screen as a list instead of one letter at a time..and then put a space in the parentheses to make sure that the letters are being spaced by a comma and then a space
+            	
+        document.querySelector("#game").innerHTML = html; //this is simply telling the "document" to change the inner html (as in what is on the page) to the new html
 
-	<p>Your Guesses So Far: <game id="guesses">0</game></p>
-
-	<script type="text/javascript">
-
-	var userGuess = ["a", "b", "c", "d", "e"]
-	
-	  var wins = 0;
-      var losses = 0;
-      var guessesLeft = 10;
-      var totalGuesses = 10;
-
-
-      document.onkeyup = function(event) {
-        var userGuess = event.key;	
-
-      var computerGuess = computerChoices[Math.floor(Math.random() * computerChoices.length)];
-
-	</script>
-
+    }
+    </script>
 </body>
+
 </html>
